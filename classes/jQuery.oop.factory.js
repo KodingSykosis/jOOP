@@ -182,6 +182,10 @@
                 /// <param name="parent" type="String">Super Class to inherit from</param>
                 /// <param name="prototype" type="Object">Prototype of class to be stored</param>
 
+                if (typeof parent == 'string') {
+                    parent = this.scriptCache.value(parent);
+                }
+
                 var cls = $.cls(prototype, parent);
                 
                 //If the class is a singleton, create a new instance and store
