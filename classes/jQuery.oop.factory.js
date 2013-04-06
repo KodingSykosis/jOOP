@@ -162,8 +162,13 @@
                 ).done(
                     function (script) {
                         var results = eval(script);
-                        self.scriptCache
-                            .add(scriptName, results);
+                        
+                        //This will allow for your script to register itself..
+                        //ie: $.factory(scriptName, prototype [,super]);
+                        if (!self.scriptCache.exist(scriptName)) {
+                            self.scriptCache
+                                .add(scriptName, results);
+                        }
 
                         return create();
                     }
