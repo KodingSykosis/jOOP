@@ -23,4 +23,7 @@ Examples
 
 Demo
 --
-<http://jsfiddle.net/kodingsykosis/PrQWu/>
+$.cls&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<http://jsfiddle.net/kodingsykosis/PrQWu/><br/>
+$.factory&nbsp;
+<http://jsfiddle.net/kodingsykosis/PzHtw/>

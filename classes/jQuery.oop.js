@@ -117,10 +117,16 @@
  ***/
 
 (function ($) {
-    if (!$.scriptRepository) {
-        $.scriptRepository = '/data/scripts.json';
-    }
+    try {
+        var scripts = document.getElementsByTagName('script');
+        var myTag = scripts[scripts.length - 1];
+        var repoAttr = myTag.getAttribute('repository');
 
+        if (typeof repoAttr != 'undefined') {
+            $.scriptRepository = repoAttr;
+        }
+    } catch(e) { }
+    
     var cache = function(overwriteException) {
         var store = {};
         
@@ -187,9 +193,10 @@
                     scriptCache: new cache(),
                     appCache: new cache(),
                     repository: {},
-                    initialized: false
+                    initialized: $.scriptRepository === false
                 });
 
+                if (!this.initialized)
                 this.deferred =
                     $.getJSON($.scriptRepository)
                         .done(function(data) {
@@ -248,7 +255,7 @@
                 }
 
                 var url = this.getScriptUrl(scriptName);
-                if (typeof url == 'undefined') {
+                if (typeof url == 'undefined' || url === false) {
                     return deferred.reject(scriptName, 'Not Found');
                 }
 
@@ -280,7 +287,7 @@
                 var cls = $.cls(prototype, parent);
                 
                 //If the class is a singleton, create a new instance and store
-                if (cls.singleton === true) {
+                if (cls.prototype.singleton === true) {
                     var self = this;
                     $(function() {
                         self.createInstance(scriptName, cls);

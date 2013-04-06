@@ -25,11 +25,4 @@
                 .append(message + '\n');
         }
     });
-
-    $(function() {
-        $.factory('shell').always(
-            function(scriptName, status, script) {
-                 console.log(scriptName, status, script);
-            });
-    });
 })(jQuery);
