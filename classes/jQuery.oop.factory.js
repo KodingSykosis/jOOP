@@ -111,17 +111,6 @@
                 var self = this,
                     deferred = $.Deferred();
 
-                //If we haven't finished loading the repository
-                //defer the load request
-                if (!this.initialized) {
-                    return this.deferred = this.deferred
-                        .always(
-                            function() {
-                                return self.load(scriptName, args);
-                            }
-                        );
-                }
-
                 //If it's a number, it's a pid.
                 if (typeof scriptName == 'number') {
                     return this.appCache.value(scriptName);
@@ -136,7 +125,19 @@
                 //Make sure we know what we are asking for here
                 if (!(scriptName in this.repository) &&
                     !this.scriptCache.exist(scriptName)) {
+                    
+                    //If we haven't finished loading the repository
+                    //defer the load request
+                    if (!this.initialized) {
+                        return this.deferred = this.deferred
+                            .always(
+                                function() {
+                                    return self.load(scriptName, args);
+                                }
+                            );
+                    } else {
                         deferred.reject(scriptName, 'Script not found');
+                    }
                 }
 
                 //Setup our deffered object and vars to contain the magic.
