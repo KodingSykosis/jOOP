@@ -48,13 +48,47 @@
     <Content Include="apps\test1.js" />
     <Content Include="apps\test2.js" />
     <Content Include="classes\jQuery.oop.class.js" />
+    <Content Include="classes\jQuery.oop.class.min.js">
+      <DependentUpon>jQuery.oop.class.js</DependentUpon>
+    </Content>
     <Content Include="classes\jQuery.oop.factory.js" />
+    <Content Include="classes\jQuery.oop.factory.min.js">
+      <DependentUpon>jQuery.oop.factory.js</DependentUpon>
+    </Content>
     <Content Include="classes\jQuery.oop.inheritance.js" />
+    <Content Include="classes\jQuery.oop.inheritance.min.js">
+      <DependentUpon>jQuery.oop.inheritance.js</DependentUpon>
+    </Content>
+    <Content Include="classes\jQuery.oop.js">
+      <DependentUpon>jQuery.oop.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="classes\jQuery.oop.min.js">
+      <DependentUpon>jQuery.oop.js.bundle</DependentUpon>
+    </Content>
     <Content Include="classes\jQuery.oop.overrides.js" />
     <Content Include="apps\kodingsykosis.app.js" />
+    <Content Include="classes\jQuery.oop.overrides.min.js">
+      <DependentUpon>jQuery.oop.overrides.js</DependentUpon>
+    </Content>
     <Content Include="index.html" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="classes\jQuery.oop.class.min.js.map">
+      <DependentUpon>jQuery.oop.class.js</DependentUpon>
+    </Content>
+    <Content Include="classes\jQuery.oop.factory.min.js.map">
+      <DependentUpon>jQuery.oop.factory.js</DependentUpon>
+    </Content>
+    <Content Include="classes\jQuery.oop.inheritance.min.js.map">
+      <DependentUpon>jQuery.oop.inheritance.js</DependentUpon>
+    </Content>
+    <Content Include="classes\jQuery.oop.overrides.min.js.map">
+      <DependentUpon>jQuery.oop.overrides.js</DependentUpon>
+    </Content>
+    <None Include="classes\jQuery.oop.js.bundle" />
+    <Content Include="classes\jQuery.oop.min.js.map">
+      <DependentUpon>jQuery.oop.js.bundle</DependentUpon>
+    </Content>
     <None Include="README.md" />
     <None Include="data\scripts.json" />
     <Content Include="web.config" />
