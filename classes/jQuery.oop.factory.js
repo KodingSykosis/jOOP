@@ -15,16 +15,16 @@
 
 (function ($) {
     if (!$.scriptRepository) {
-        $.scriptRepository = '/scripts.json';
+        $.scriptRepository = '/data/scripts.json';
     }
 
     var cache = function(overwriteException) {
         var store = {};
         
-        return $.cls({
+        return new ($.cls({
             add: function (key, value) {
                 if (typeof store[key] != 'undefined' && overwriteException) {
-                    $.error('Object already exists in cache.')
+                    $.error('Object already exists in cache.');
                 }
 
                 return store[key] = value;
@@ -49,6 +49,16 @@
                 return null;
             },
             
+            findBy: function(key, value) {
+                for (var prop in store) {
+                    if (store[prop][key] === value) {
+                        return store[prop];
+                    }
+                }
+
+                return null;
+            },
+            
             exist: function(key) {
                 return key in store;
             },
@@ -60,50 +70,73 @@
                     }
                 }
             }
-        })();
+        }))();
     };
     
     var factory = function () {
         var __pid__ = 0;
         var newPid = function () { return ++__pid__; };
         
-        var privFact = $.cls({
+        var privFact = new ($.cls({
             main: function () {
                 var self = this;
                 $.extend(this, {
                     scriptCache: new cache(),
                     appCache: new cache(),
-                    repository: {}
+                    repository: {},
+                    initialized: false
                 });
 
-                $.getJson($.scriptRepository)
-                 .done(function(data) {
-                     self.repository = data;
-                 });
+                this.deferred =
+                    $.getJSON($.scriptRepository)
+                        .done(function(data) {
+                            self.repository = data;
+                            self.initialized = true;
+                        })
+                        .promise();
             },
             
             load: function (scriptName, args) {
                 /// <summary>Loads a class or a reference to the specified instance</summary>
                 /// <param name="scriptName" type="Object">The name of the class or a PID to an instantiated instance</param>
                 /// <param name="args" type="Array">Arguments to pass to the contructor.</param>
+                
+                var self = this,
+                    deferred = $.Deferred();
+
+                //If we haven't finished loading the repository
+                //defer the load request
+                if (!this.initialized) {
+                    return this.deferred = this.deferred
+                        .always(
+                            function() {
+                                return self.load(scriptName, args);
+                            }
+                        );
+                }
 
                 //If it's a number, it's a pid.
                 if (typeof scriptName == 'number') {
                     return this.appCache.value(scriptName);
                 }
+                
+                //Check the instance cache for a singleton
+                var app = this.appCache.findBy('__name__', scriptName);
+                if (app != null && app.singleton === true) {
+                    return deferred.resolve(app);
+                } 
 
                 //Make sure we know what we are asking for here
-                if (!(scriptName in this.scriptRepository) &&
-                    this.scriptCache.exist(scriptName)) {
-                        $.error(scriptName + ' Script not found');
+                if (!(scriptName in this.repository) &&
+                    !this.scriptCache.exist(scriptName)) {
+                        deferred.reject(scriptName, 'Script not found');
                 }
 
                 //Setup our deffered object and vars to contain the magic.
-                var deferred = $.Deferred(),
-                    create = function() {
+                var create = function() {
                         var cls = self.scriptCache.value(scriptName);
-                        var instance = self.createInstance(cls, args);
-                        return deferred.done(instance);
+                        var instance = self.createInstance(scriptName, cls, args);
+                        return deferred.resolve(scriptName, 'success', instance);
                     };
                 
                 //We already have it so call the trigger the done
@@ -111,18 +144,24 @@
                     return create();
                 }
 
+                var url = this.getScriptUrl(scriptName);
+                if (typeof url == 'undefined') {
+                    return deferred.reject(scriptName, 'Not Found');
+                }
+
                 $.getScript(
-                    this.getScriptUrl(scriptName)
+                    url
                 ).done(
-                    function(script) {
+                    function (script) {
+                        var results = eval(script);
                         self.scriptCache
-                            .add(scriptName, script);
+                            .add(scriptName, results);
 
                         return create();
                     }
                 ).fail(
                     function(jqxhr, settings, exception) {
-                        return deferred.fail(jqxhr, settings, exception);
+                        return deferred.reject(scriptName, exception);
                     }
                 );
 
@@ -135,13 +174,13 @@
                 /// <param name="parent" type="String">Super Class to inherit from</param>
                 /// <param name="prototype" type="Object">Prototype of class to be stored</param>
 
-                var cls = $.inherit(prototype, parent);
+                var cls = $.cls(prototype, parent);
                 
                 //If the class is a singleton, create a new instance and store
                 if (cls.singleton === true) {
                     var self = this;
                     $(function() {
-                        self.createInstance(cls);
+                        self.createInstance(scriptName, cls);
                     });
 
                     return null;
@@ -152,52 +191,59 @@
                     .add(scriptName, cls);
             },
             
-            createInstance: function (cls, args) {
+            createInstance: function (scriptName, cls, args) {
                 /// <summary>Creates a new instance of the provided class.  Class is stored with PID.</summary>
                 /// <param name="cls" type="Object">Class to instantiated</param>
                 /// <param name="args" type="Array">An array of arguments for the constructor.</param>
+
+                //recreate the constructor so we can
+                //apply the arguments
+                var ctor = function() { };
+                ctor.prototype = cls.prototype;
                 
-                var instance = cls.constructor.apply(null, args);
+                //Instantiate tmp constructor and assign pid
+                var instance = new ctor();
                 instance.__pid__ = newPid();
+                instance.__name__ = scriptName;
+                cls.apply(instance, args);
                 
+                //Store the instance for use later
                 return this.appCache.add(instance.__pid__, instance);
             },
             
             getScriptUrl: function(scriptName) {
                 return this.repository[scriptName];
             }
-        })();
+        }))();
 
-        return $.cls({
-            main: function (scriptName, parent, prototype) {
-                //Allowed values are string names and PIDs
-                if (typeof scriptName != 'string' && typeof scriptName != 'number') {
-                    $.error('Script name must be provided');
-                }
-                
-                //Insure a PID is an Int
-                if ($.isNumeric(scriptName)) {
-                    scriptName = parseInt(scriptName);
-                }
-                
-                if ((typeof parent == 'undefined' || typeof parent.splice == 'function')
-                    && typeof prototype == 'undefined') {
-                    //We are asking for a new instance of [scriptName]
-                    //Parent could be arguments for the new instance's constructor
-                        return privFact.load(scriptName, parent);
-                }
-
-                //If no prototype is provided assume the parent
-                //is the prototype
-                if (typeof prototype == 'undefined') {
-                    prototype = parent;
-                    parent = null;
-                }
-
-                //We are creating a new script to store.
-                return privFact.store(scriptName, parent, prototype);
+        return function(scriptName, parent, prototype) {
+            //Allowed values are string names and PIDs
+            if (typeof scriptName != 'string' && typeof scriptName != 'number') {
+                $.error('Script name must be provided');
             }
-        });
+
+            //Insure a PID is an Int
+            if ($.isNumeric(scriptName)) {
+                scriptName = parseInt(scriptName);
+            }
+
+            if ((typeof parent == 'undefined' || typeof parent.splice == 'function')
+                && typeof prototype == 'undefined') {
+                //We are asking for a new instance of [scriptName]
+                //Parent could be arguments for the new instance's constructor
+                return privFact.load(scriptName, parent);
+            }
+
+            //If no prototype is provided assume the parent
+            //is the prototype
+            if (typeof prototype == 'undefined') {
+                prototype = parent;
+                parent = null;
+            }
+
+            //We are creating a new script to store.
+            return privFact.store(scriptName, parent, prototype);
+        };
     };
     
     //Create as singleton class

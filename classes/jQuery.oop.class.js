@@ -17,7 +17,7 @@
             var prototype =
             $.inherit(
                 proto,
-                typeof _super == 'undefined'
+                typeof _super == 'undefined' || _super == null
                     ? undefined
                     : _super.prototype
             );

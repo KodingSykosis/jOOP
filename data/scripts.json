@@ -1,4 +1,4 @@
 ﻿{
-	'apps.test1': '/scripts/test1.js',
-	'apps.test2': '/scripts/test2.js'
+	"apps.test1": "/apps/test1.js",
+	"apps.test2": "/apps/test2.js"
 }
