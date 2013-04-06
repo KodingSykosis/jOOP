@@ -3,6 +3,9 @@ jOOP
 
 jQuery Object Oriented Programming
 
+This is a continuation of my previous framework. 
+<https://github.com/KodingSykosis/appFactory>
+
 Examples
 --
 
