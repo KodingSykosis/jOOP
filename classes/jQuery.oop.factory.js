@@ -19,7 +19,7 @@
         var myTag = scripts[scripts.length - 1];
         var repoAttr = myTag.getAttribute('repository');
 
-        if (typeof repoAttr != 'undefined') {
+        if (typeof repoAttr !== 'undefined') {
             $.scriptRepository = repoAttr;
         }
     } catch(e) { }
@@ -29,7 +29,7 @@
         
         return new ($.cls({
             add: function (key, value) {
-                if (typeof store[key] != 'undefined' && overwriteException) {
+                if (typeof store[key] !== 'undefined' && overwriteException) {
                     $.error('Object already exists in cache.');
                 }
 
@@ -112,13 +112,13 @@
                     deferred = $.Deferred();
 
                 //If it's a number, it's a pid.
-                if (typeof scriptName == 'number') {
+                if (typeof scriptName === 'number') {
                     return this.appCache.value(scriptName);
                 }
                 
                 //Check the instance cache for a singleton
                 var app = this.appCache.findBy('__name__', scriptName);
-                if (app != null && app.singleton === true) {
+                if (app !== null && app.singleton === true) {
                     return deferred.resolve(app);
                 } 
 
@@ -153,7 +153,7 @@
                 }
 
                 var url = this.getScriptUrl(scriptName);
-                if (typeof url == 'undefined' || url === false) {
+                if (typeof url === 'undefined' || url === false) {
                     return deferred.reject(scriptName, 'Not Found');
                 }
 
@@ -187,7 +187,7 @@
                 /// <param name="parent" type="String">Super Class to inherit from</param>
                 /// <param name="prototype" type="Object">Prototype of class to be stored</param>
 
-                if (typeof parent == 'string') {
+                if (typeof parent === 'string') {
                     parent = this.scriptCache.value(parent);
                 }
 
@@ -235,17 +235,17 @@
 
         return function(scriptName, parent, prototype) {
             //Allowed values are string names and PIDs
-            if (typeof scriptName != 'string' && typeof scriptName != 'number') {
+            if (typeof scriptName !== 'string' && typeof scriptName !== 'number') {
                 $.error('Script name must be provided');
             }
 
             //Insure a PID is an Int
             if ($.isNumeric(scriptName)) {
-                scriptName = parseInt(scriptName);
+                scriptName = parseInt(scriptName, 10);
             }
 
-            if ((typeof parent == 'undefined' || typeof parent.splice == 'function')
-                && typeof prototype == 'undefined') {
+            if ((typeof parent === 'undefined' || typeof parent.splice === 'function')
+                && typeof prototype === 'undefined') {
                 //We are asking for a new instance of [scriptName]
                 //Parent could be arguments for the new instance's constructor
                 return privFact.load(scriptName, parent);
@@ -253,7 +253,7 @@
 
             //If no prototype is provided assume the parent
             //is the prototype
-            if (typeof prototype == 'undefined') {
+            if (typeof prototype === 'undefined') {
                 prototype = parent;
                 parent = null;
             }

@@ -12,7 +12,7 @@
 
 (function($) {
     $.extend({
-        override: function (sub, _super) {
+        override: function(sub, _super) {
             return function() {
                 var tmp = this._super;
                 this._super = _super || $.noop;
@@ -23,5 +23,5 @@
                 return ret;
             };
         }
-    })
+    });
 })(jQuery);

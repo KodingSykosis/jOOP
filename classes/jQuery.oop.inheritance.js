@@ -12,13 +12,13 @@
 
 (function ($) {
     $.extend({
-        inherit: function (subtype, _super) {
+        inherit: function(subtype, _super) {
             var _subtype = $.extend({ _super: $.noop }, subtype);
 
             for (var name in _super) {
-                if (typeof subtype[name] == 'function' && typeof _super[name] == 'function') {
+                if (typeof subtype[name] === 'function' && typeof _super[name] === 'function') {
                     _subtype[name] = $.override(subtype[name], _super[name]);
-                } else if (typeof subtype[name] == 'object' && typeof _super[name] == 'object') {
+                } else if (typeof subtype[name] === 'object' && typeof _super[name] === 'object') {
                     _subtype[name] = $.inherit(subtype[name], _super[name]);
                 } else if (!_subtype[name]) {
                     _subtype[name] = _super[name];
@@ -27,5 +27,5 @@
 
             return _subtype;
         }
-    })
+    });
 })(jQuery);

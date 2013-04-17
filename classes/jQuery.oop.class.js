@@ -17,7 +17,7 @@
             var prototype =
             $.inherit(
                 proto,
-                typeof _super == 'undefined' || _super == null
+                typeof _super === 'undefined' || _super === null
                     ? undefined
                     : _super.prototype
             );
@@ -28,7 +28,7 @@
                     if (this.main) {
                         this.main.apply(this, args);
                     }
-                };
+                }
 
                 app.prototype = prototype;
 
