@@ -2,6 +2,7 @@
  *      Author: KodingSykosis
  *        Date: 04/04/2013
  *     Version: 1.0
+ *     License: GPL v3 (see License.txt or http://www.gnu.org/licenses/)
  * Description: This plugin is designed to simplify 
  *              object oriented programing in javascript
  *

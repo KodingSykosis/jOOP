@@ -3,6 +3,7 @@
  *      Author: KodingSykosis
  *        Date: 04/04/2013
  *     Version: 1.0
+ *     License: GPL v3 (see License.txt or http://www.gnu.org/licenses/)
  * Description: This plugin is designed to simplify 
  *              object oriented programing in javascript
  *
@@ -31,6 +32,7 @@
  *      Author: KodingSykosis
  *        Date: 04/04/2013
  *     Version: 1.0
+ *     License: GPL v3 (see License.txt or http://www.gnu.org/licenses/)
  * Description: This plugin is designed to simplify 
  *              object oriented programing in javascript
  *
@@ -63,6 +65,7 @@
  *      Author: KodingSykosis
  *        Date: 04/04/2013
  *     Version: 1.0
+ *     License: GPL v3 (see License.txt or http://www.gnu.org/licenses/)
  * Description: This plugin is designed to simplify 
  *              object oriented programing in javascript
  *
@@ -105,6 +108,7 @@
  *      Author: KodingSykosis
  *        Date: 04/04/2013
  *     Version: 1.0
+ *     License: GPL v3 (see License.txt or http://www.gnu.org/licenses/)
  * Description: This plugin is designed to simplify 
  *              an application or script factory
  *              with support for aJax script loading
