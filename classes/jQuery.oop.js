@@ -55,6 +55,12 @@
                     _subtype[name] = _super[name];
                 }
             }
+            
+            //Inherit the existing controller if it 
+            //hasn't been overwritten by a main
+            if (_super.constructor && !_super.main) {
+                _subtype = $.override(subtype.main, _super.constructor);
+            }
 
             return _subtype;
         }
