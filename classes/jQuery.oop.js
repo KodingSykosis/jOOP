@@ -58,8 +58,8 @@
             
             //Inherit the existing controller if it 
             //hasn't been overwritten by a main
-            if (_super.constructor && !_super.main) {
-                _subtype = $.override(subtype.main, _super.constructor);
+            if (typeof _super === 'object' && typeof _super.main === 'undefined') {
+                _subtype.main = $.override(subtype.main, _super.constructor);
             }
 
             return _subtype;
