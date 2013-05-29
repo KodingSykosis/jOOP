@@ -64,8 +64,6 @@
                     if (typeof ret === 'object') {
                         $.extend(this, $.inherit(this, ret));
                     }
-
-                    //$.extend(_super.constructor.prototype, this);
                 });
             }
 
