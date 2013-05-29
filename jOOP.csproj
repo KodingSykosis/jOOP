@@ -48,6 +48,7 @@
     <Content Include="apps\test1.js" />
     <Content Include="apps\test2.js" />
     <Content Include="apps\test3.js" />
+    <Content Include="apps\test4.js" />
     <Content Include="classes\jQuery.oop.class.js" />
     <Content Include="classes\jQuery.oop.class.min.js">
       <DependentUpon>jQuery.oop.class.js</DependentUpon>

@@ -59,7 +59,14 @@
             //Inherit the existing controller if it 
             //hasn't been overwritten by a main
             if (typeof _super === 'object' && typeof _super.main === 'undefined') {
-                _subtype.main = $.override(subtype.main, _super.constructor);
+                _subtype.main = $.override(subtype.main, function() {
+                    var ret = _super.constructor.apply(this, arguments);
+                    if (typeof ret === 'object') {
+                        $.extend(this, $.inherit(this, ret));
+                    }
+
+                    //$.extend(_super.constructor.prototype, this);
+                });
             }
 
             return _subtype;
@@ -95,6 +102,7 @@
             var fn = function () {
                 function app() {
                     var args = arguments;
+
                     if (this.main) {
                         this.main.apply(this, args);
                     }
@@ -106,6 +114,19 @@
             };
 
             return fn();
+        },
+        ns: function (namespace, parent) {
+            var parts = namespace.split('.');
+            var target = parts.splice(0, 1);
+            parent = parent || window;
+
+            if (typeof parent[target] === "undefined") {
+                parent[target] = {};
+            }
+
+            if (parts.length > 0) {
+                $.ns(parts.join('.'), parent[target]);
+            }
         }
     });
 })(jQuery);

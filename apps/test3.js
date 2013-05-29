@@ -1,4 +1,4 @@
-﻿(function($) {
+﻿(function ($) {
     $.factory('myClass', {
         main: function () {
             $('#output2').append('My App is initializing\n');

@@ -29,7 +29,14 @@
             //Inherit the existing controller if it 
             //hasn't been overwritten by a main
             if (typeof _super === 'object' && typeof _super.main === 'undefined') {
-                _subtype.main = $.override(subtype.main, _super.constructor);
+                _subtype.main = $.override(subtype.main, function() {
+                    var ret = _super.constructor.apply(this, arguments);
+                    if (typeof ret === 'object') {
+                        $.extend(this, $.inherit(this, ret));
+                    }
+
+                    //$.extend(_super.constructor.prototype, this);
+                });
             }
 
             return _subtype;

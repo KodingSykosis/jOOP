@@ -26,6 +26,7 @@
             var fn = function () {
                 function app() {
                     var args = arguments;
+
                     if (this.main) {
                         this.main.apply(this, args);
                     }
@@ -37,6 +38,19 @@
             };
 
             return fn();
+        },
+        ns: function (namespace, parent) {
+            var parts = namespace.split('.');
+            var target = parts.splice(0, 1);
+            parent = parent || window;
+
+            if (typeof parent[target] === "undefined") {
+                parent[target] = {};
+            }
+
+            if (parts.length > 0) {
+                $.ns(parts.join('.'), parent[target]);
+            }
         }
     });
 })(jQuery);
