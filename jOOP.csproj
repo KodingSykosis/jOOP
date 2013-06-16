@@ -91,6 +91,7 @@
     <Content Include="classes\jQuery.oop.min.js.map">
       <DependentUpon>jQuery.oop.js.bundle</DependentUpon>
     </Content>
+    <Content Include="joop.jquery.json" />
     <None Include="README.md" />
     <None Include="data\scripts.json" />
     <Content Include="License.txt" />
