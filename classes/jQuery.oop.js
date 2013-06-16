@@ -56,7 +56,7 @@
                 }
             }
             
-            //Inherit the existing controller if it 
+            //Inherit the existing constructor if it 
             //hasn't been overwritten by a main
             if (typeof _super === 'object' && typeof _super.main === 'undefined') {
                 _subtype.main = $.override(subtype.main, function() {
